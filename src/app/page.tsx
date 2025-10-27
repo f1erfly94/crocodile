@@ -1,7 +1,9 @@
 'use client'
 import React, { useState, useEffect, useCallback } from 'react';
 import { Timer, Users, Trophy, Play, RotateCcw, Settings, BookOpen, ChevronRight, Home, Pause, PlayCircle, Edit2, Check, Eye, EyeOff } from 'lucide-react';
-
+import {easyWords} from "@/app/components/words/easyWords";
+import {mediumWords} from "@/app/components/words/mediumWords";
+import {hardWords} from "@/app/components/words/hardWords";
 // Типи
 type Difficulty = 'easy' | 'medium' | 'hard';
 type GameMode = 'team' | 'individual';
@@ -25,11 +27,10 @@ interface Team {
   streak: number;
 }
 
-// База слів
 const WORDS: Record<Difficulty, string[]> = {
-  easy: ['Кішка', 'Літак', 'Плавання', 'Дерево', 'Танець', 'Телефон', 'Біг', 'Сніг', "М'яч", 'Їжа'],
-  medium: ['Спогад', 'Бібліотека', 'Фотографія', 'Презентація', 'Турбота', 'Екскаватор', 'Конфлікт', 'Ветеринар', 'Баланс', 'Парашут'],
-  hard: ['Ностальгія', 'Компроміс', 'Інтуїція', 'Еволюція', 'Демократія', 'Прокрастинація', 'Байдужість', 'Метафора', 'Інфляція', 'Саботаж']
+  easy: easyWords,
+  medium: mediumWords,
+  hard: hardWords,
 };
 
 const POINTS: Record<Difficulty, number> = {
@@ -326,7 +327,7 @@ const CrocodileGame: React.FC = () => {
                   >
                     <Trophy className="w-8 h-8 mx-auto mb-2" />
                     <div className="font-semibold">Індивідуально</div>
-                    <div className="text-sm text-gray-600">2-10 гравців</div>
+                    <div className="text-sm text-gray-600">2-20 гравців</div>
                   </button>
                 </div>
               </div>
@@ -338,7 +339,7 @@ const CrocodileGame: React.FC = () => {
                 <input
                     type="range"
                     min={gameMode === 'team' ? 4 : 2}
-                    max={gameMode === 'team' ? 20 : 10}
+                    max={gameMode === 'team' ? 20 : 20}
                     value={playerCount}
                     onChange={(e) => setPlayerCount(Number(e.target.value))}
                     className="w-full h-3 bg-gray-200 rounded-lg appearance-none cursor-pointer"
@@ -479,27 +480,27 @@ const CrocodileGame: React.FC = () => {
               {gameMode === 'team' ? (
                   <>
                     <div>
-                      <label className="block text-lg font-semibold text-gray-800 mb-3">
+                      <label className="block text-lg font-semibold text-black mb-3">
                         🔵 Перша команда
                       </label>
                       <input
                           type="text"
                           value={teams[0].name}
                           onChange={(e) => updateTeamName(1, e.target.value)}
-                          className="w-full p-4 text-lg border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:outline-none transition-all"
+                          className="w-full p-4 text-lg border-2 text-black border-gray-200 rounded-xl focus:border-purple-500 focus:outline-none transition-all"
                           placeholder="Наприклад: Блискавки"
                           maxLength={20}
                       />
                     </div>
                     <div>
-                      <label className="block text-lg font-semibold text-gray-800 mb-3">
+                      <label className="block text-lg font-semibold text-black mb-3">
                         🔴 Друга команда
                       </label>
                       <input
                           type="text"
                           value={teams[1].name}
                           onChange={(e) => updateTeamName(2, e.target.value)}
-                          className="w-full p-4 text-lg border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:outline-none transition-all"
+                          className="w-full p-4 text-lg border-2 border-gray-200  text-black rounded-xl focus:border-purple-500 focus:outline-none transition-all"
                           placeholder="Наприклад: Вогники"
                           maxLength={20}
                       />
@@ -516,7 +517,7 @@ const CrocodileGame: React.FC = () => {
                               type="text"
                               value={player.name}
                               onChange={(e) => updatePlayerName(player.id, e.target.value)}
-                              className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:outline-none transition-all"
+                              className="w-full p-3 border-2 text-black border-gray-200 rounded-xl focus:border-purple-500 focus:outline-none transition-all"
                               placeholder={`Ім'я гравця ${idx + 1}`}
                               maxLength={15}
                           />
@@ -679,7 +680,7 @@ const CrocodileGame: React.FC = () => {
 
                       {isWordVisible ? (
                           <>
-                            <div className="text-5xl font-bold text-purple-900 mb-4">
+                            <div className="text-4xl font-bold text-purple-900 mb-4 break-words hyphens-auto">
                               {currentWord.text}
                             </div>
                             <div className="text-gray-600">

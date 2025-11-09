@@ -28,6 +28,7 @@ const CrocodileGame = () => {
   const [showExitConfirm, setShowExitConfirm] = useState(false);
   const [showGuesserMenu, setShowGuesserMenu] = useState(false);
   const [currentExplainer, setCurrentExplainer] = useState(0);
+  const [penaltyEnabled, setPenaltyEnabled] = useState(true);
 
  const words = {
     easy: easyWords,
@@ -75,6 +76,7 @@ const CrocodileGame = () => {
     setTeams(newTeams);
     setCurrentTeam(0);
     setTimeLeft(timeLimit);
+    setWordHidden(false);
     pickNewWord();
     setScreen('game');
   };
@@ -87,16 +89,18 @@ const CrocodileGame = () => {
     }));
     setPlayers(newPlayers);
     setCurrentPlayer(0);
-    setCurrentExplainer(0); // Додати цей рядок
+    setCurrentExplainer(0);
     setTimeLeft(timeLimit);
+    setWordHidden(false);
     pickNewWord();
     setScreen('game');
   };
+
   const pickNewWord = () => {
     const wordList = words[difficulty];
     const word = wordList[Math.floor(Math.random() * wordList.length)];
     setCurrentWord(word);
-    setWordHidden(true);
+    setWordHidden(false);
   };
 
   const handleGuessCorrect = (playerId: number | null = null) => {
@@ -158,6 +162,17 @@ const CrocodileGame = () => {
   };
 
   const handleSkipWord = () => {
+    if (penaltyEnabled) {
+      if (gameMode === 'teams') {
+        const newTeams = [...teams];
+        newTeams[currentTeam].score -= 1;
+        setTeams(newTeams);
+      } else {
+        const newPlayers = [...players];
+        newPlayers[currentExplainer].score -= 1;
+        setPlayers(newPlayers);
+      }
+    }
     pickNewWord();
     setShowGuesserMenu(false);
   };
@@ -166,15 +181,13 @@ const CrocodileGame = () => {
     setCurrentTeam((prev) => (prev + 1) % teamCount);
     setTimeLeft(timeLimit);
     setIsRunning(false);
-    setWordHidden(true);
+    setWordHidden(false);
   };
 
   const startNewRound = () => {
-    setTimeLeft(timeLimit); // Додати цей рядок
+    setTimeLeft(timeLimit);
     setIsRunning(true);
-    if (gameMode === 'solo') {
-      setCurrentExplainer((prev) => (prev + 1) % playerCount); // Додати цей рядок
-    }
+    setWordHidden(false);
   };
 
   const handleExitGame = () => {
@@ -186,9 +199,17 @@ const CrocodileGame = () => {
     setGameMode(null);
     setCurrentTeam(0);
     setCurrentPlayer(0);
-    setCurrentExplainer(0); // Додати цей рядок
+    setCurrentExplainer(0);
     setTeams([]);
     setPlayers([]);
+    setTeamCount(2);
+    setPlayerCount(2);
+    setTeamNames(['Команда 1', 'Команда 2']);
+    setPlayerNames(['Гравець 1', 'Гравець 2']);
+    setDifficulty('medium');
+    setTimeLimit(111);
+    setScoreTarget(50);
+    setPenaltyEnabled(true);
     setTimeLeft(timeLimit);
     setIsRunning(false);
     setShowExitConfirm(false);
@@ -278,6 +299,7 @@ const CrocodileGame = () => {
               >
                 🎯 Режим гравців
               </button>
+
             </div>
 
             <button
@@ -307,7 +329,7 @@ const CrocodileGame = () => {
                   Кількість команд
                 </label>
                 <div className="flex gap-2">
-                  {[2, 3, 4,5,6,7,8].map(num => (
+                  {[2, 3, 4, 5, 6, 7, 8].map(num => (
                       <button
                           key={num}
                           onClick={() => {
@@ -347,7 +369,17 @@ const CrocodileGame = () => {
                   ))}
                 </div>
               </div>
-
+              <div>
+                <label className="flex items-center gap-3 text-lg font-semibold text-gray-800">
+                  <input
+                      type="checkbox"
+                      checked={penaltyEnabled}
+                      onChange={(e) => setPenaltyEnabled(e.target.checked)}
+                      className="w-5 h-5"
+                  />
+                  Штраф -1 бал за пропуск слова
+                </label>
+              </div>
               <div>
                 <label className="block text-lg font-semibold text-gray-800 mb-3">
                   Таймер: {timeLimit} сек
@@ -447,7 +479,7 @@ const CrocodileGame = () => {
                   Кількість гравців
                 </label>
                 <div className="flex gap-2">
-                  {[2, 3, 4, 5,6,7,8,9,10,11,12].map(num => (
+                  {[2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(num => (
                       <button
                           key={num}
                           onClick={() => {
@@ -487,7 +519,17 @@ const CrocodileGame = () => {
                   ))}
                 </div>
               </div>
-
+              <div>
+                <label className="flex items-center gap-3 text-lg font-semibold text-gray-800">
+                  <input
+                      type="checkbox"
+                      checked={penaltyEnabled}
+                      onChange={(e) => setPenaltyEnabled(e.target.checked)}
+                      className="w-5 h-5"
+                  />
+                  Штраф -1 бал за пропуск слова
+                </label>
+              </div>
               <div>
                 <label className="block text-lg font-semibold text-gray-800 mb-3">
                   Таймер: {timeLimit} сек
@@ -641,7 +683,7 @@ const CrocodileGame = () => {
               </button>
             </div>
 
-            <div className="grid grid-cols-2 gap-4 mb-8">
+            <div className="grid grid-cols-2 gap-4 mb-4">
               {gameMode === 'teams' ? (
                   teams.map((team, idx) => (
                       <div
@@ -700,9 +742,11 @@ const CrocodileGame = () => {
               <div className="text-6xl font-bold text-blue-600 mb-4">
                 {timeLeft}
               </div>
-              <p className="text-center text-gray-600 mb-6">
-                Показує: <span className="font-bold text-purple-600">{players[currentExplainer]?.name}</span>
-              </p>
+              {gameMode === 'solo' && (
+                  <p className="text-center text-gray-600 mb-6">
+                    Показує: <span className="font-bold text-purple-600">{players[currentExplainer]?.name}</span>
+                  </p>
+              )}
               <div className="text-gray-700 font-semibold">Час для вгадування</div>
             </div>
 
@@ -757,7 +801,7 @@ const CrocodileGame = () => {
                                 : 'bg-orange-500 text-white hover:bg-orange-600'
                         }`}
                     >
-                      ⊘ Пропустити
+                      ⊘ Пропустити {penaltyEnabled && '(-1)'}
                     </button>
                   </>
               )}
@@ -842,17 +886,22 @@ const CrocodileGame = () => {
 
             <div className="flex flex-col gap-3">
               <button
-                  onClick={() => setScreen('welcome')}
-                  className="w-full bg-green-500 text-white py-3 rounded-lg font-semibold hover:bg-green-600 transition flex items-center justify-center gap-2"
-              >
-                <RotateCcw size={20} /> Грати знову
-              </button>
-              <button
-                  onClick={() => setScreen('welcome')}
+                  onClick={() => {
+                    setTeamCount(2);
+                    setPlayerCount(2);
+                    setTeamNames(['Команда 1', 'Команда 2']);
+                    setPlayerNames(['Гравець 1', 'Гравець 2']);
+                    setDifficulty('medium');
+                    setTimeLimit(111);
+                    setScoreTarget(50);
+                    setPenaltyEnabled(true);
+                    setScreen('welcome');
+                  }}
                   className="w-full bg-gray-500 text-white py-3 rounded-lg font-semibold hover:bg-gray-600 transition"
               >
                 ← На головне меню
               </button>
+
             </div>
           </div>
         </div>

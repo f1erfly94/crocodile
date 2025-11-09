@@ -335,18 +335,17 @@ const CrocodileGame = () => {
 // Екран 2: Вибір режиму гри - ЗМІНЕНО
   if (screen === 'gameMode') {
     return (
-        <div
-            className="min-h-screen bg-gradient-to-br from-green-500 via-emerald-500 to-teal-600 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full">
-            <h2 className="text-3xl font-bold text-center text-green-600 mb-8">Виберіть режим</h2>
+        <div className="min-h-screen bg-gradient-to-br from-green-500 via-emerald-500 to-teal-600 flex items-center justify-center p-3 sm:p-4">
+          <div className="bg-white rounded-2xl shadow-2xl p-4 sm:p-8 max-w-md w-full">
+            <h2 className="text-2xl sm:text-3xl font-bold text-center text-green-600 mb-4 sm:mb-8">Виберіть режим</h2>
 
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
               <button
                   onClick={() => {
                     setGameMode('teams');
                     setScreen('setupTeams');
                   }}
-                  className="w-full bg-blue-500 text-white py-4 rounded-lg font-semibold hover:bg-blue-600 transition text-lg"
+                  className="w-full bg-blue-500 text-white py-3 sm:py-4 rounded-lg text-base sm:text-lg font-semibold hover:bg-blue-600 transition"
               >
                 👥 Командна гра
               </button>
@@ -355,7 +354,7 @@ const CrocodileGame = () => {
                     setGameMode('solo');
                     setScreen('setupPlayers');
                   }}
-                  className="w-full bg-purple-500 text-white py-4 rounded-lg font-semibold hover:bg-purple-600 transition text-lg"
+                  className="w-full bg-purple-500 text-white py-3 sm:py-4 rounded-lg text-base sm:text-lg font-semibold hover:bg-purple-600 transition"
               >
                 🎯 Режим гравців
               </button>
@@ -363,7 +362,7 @@ const CrocodileGame = () => {
 
             <button
                 onClick={() => setScreen('welcome')}
-                className="w-full mt-6 bg-gray-500 text-white py-2 rounded-lg font-semibold hover:bg-gray-600 transition"
+                className="w-full mt-4 sm:mt-6 bg-gray-500 text-white py-2 rounded-lg text-sm sm:text-base font-semibold hover:bg-gray-600 transition"
             >
               ← Назад
             </button>
@@ -371,24 +370,22 @@ const CrocodileGame = () => {
         </div>
     );
   }
-  //
-
 
 // НОВИЙ ЕКРАН 3a: Налаштування команд (тільки кількість та назви)
   if (screen === 'setupTeams') {
     return (
-        <div className="min-h-screen bg-gradient-to-br from-green-500 via-emerald-500 to-teal-600 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <h2 className="text-3xl font-bold text-center text-green-600 mb-6">
-              👥 Налаштування команд
+        <div className="min-h-screen bg-gradient-to-br from-green-500 via-emerald-500 to-teal-600 flex items-center justify-center p-3 sm:p-4">
+          <div className="bg-white rounded-2xl shadow-2xl p-4 sm:p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <h2 className="text-2xl sm:text-3xl font-bold text-center text-green-600 mb-4 sm:mb-6">
+              👥 Налаштування
             </h2>
 
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
               <div>
-                <label className="block text-lg font-semibold text-gray-800 mb-3">
+                <label className="block text-base sm:text-lg font-semibold text-gray-800 mb-2 sm:mb-3">
                   Кількість команд
                 </label>
-                <div className="flex gap-2">
+                <div className="grid grid-cols-4 sm:flex gap-2">
                   {[2, 3, 4, 5, 6, 7, 8].map(num => (
                       <button
                           key={num}
@@ -396,7 +393,7 @@ const CrocodileGame = () => {
                             setTeamCount(num);
                             setTeamNames(Array(num).fill(null).map((_, i) => `Команда ${i + 1}`));
                           }}
-                          className={`flex-1 py-2 rounded-lg font-semibold transition ${
+                          className={`flex-1 py-2 rounded-lg text-sm sm:text-base font-semibold transition ${
                               teamCount === num
                                   ? 'bg-green-500 text-white'
                                   : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
@@ -409,7 +406,7 @@ const CrocodileGame = () => {
               </div>
 
               <div>
-                <label className="block text-lg font-semibold text-gray-800 mb-3">
+                <label className="block text-base sm:text-lg font-semibold text-gray-800 mb-2 sm:mb-3">
                   Назви команд
                 </label>
                 <div className="space-y-2">
@@ -424,23 +421,23 @@ const CrocodileGame = () => {
                             setTeamNames(newNames);
                           }}
                           placeholder={`Назва команди ${i + 1}`}
-                          className="w-full px-3 py-2 border-2 border-gray-300 text-black rounded-lg focus:border-green-500 outline-none"
+                          className="w-full px-3 py-2 text-sm sm:text-base border-2 border-gray-300 text-black rounded-lg focus:border-green-500 outline-none"
                       />
                   ))}
                 </div>
               </div>
             </div>
 
-            <div className="flex gap-3 mt-8">
+            <div className="flex gap-3 mt-6 sm:mt-8">
               <button
                   onClick={() => setScreen('gameMode')}
-                  className="flex-1 bg-gray-500 text-white py-2 rounded-lg font-semibold hover:bg-gray-600 transition"
+                  className="flex-1 bg-gray-500 text-white py-2 rounded-lg text-sm sm:text-base font-semibold hover:bg-gray-600 transition"
               >
                 ← Назад
               </button>
               <button
                   onClick={() => setScreen('settingsTeams')}
-                  className="flex-1 bg-green-500 text-white py-2 rounded-lg font-semibold hover:bg-green-600 transition"
+                  className="flex-1 bg-green-500 text-white py-2 rounded-lg text-sm sm:text-base font-semibold hover:bg-green-600 transition"
               >
                 Далі →
               </button>
@@ -453,18 +450,18 @@ const CrocodileGame = () => {
 // НОВИЙ ЕКРАН 3b: Налаштування гравців (тільки кількість та імена)
   if (screen === 'setupPlayers') {
     return (
-        <div className="min-h-screen bg-gradient-to-br from-green-500 via-emerald-500 to-teal-600 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <h2 className="text-3xl font-bold text-center text-purple-600 mb-6">
-              🎯 Налаштування гравців
+        <div className="min-h-screen bg-gradient-to-br from-green-500 via-emerald-500 to-teal-600 flex items-center justify-center p-3 sm:p-4">
+          <div className="bg-white rounded-2xl shadow-2xl p-4 sm:p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <h2 className="text-2xl sm:text-3xl font-bold text-center text-purple-600 mb-4 sm:mb-6">
+              🎯 Налаштування
             </h2>
 
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
               <div>
-                <label className="block text-lg font-semibold text-gray-800 mb-3">
+                <label className="block text-base sm:text-lg font-semibold text-gray-800 mb-2 sm:mb-3">
                   Кількість гравців
                 </label>
-                <div className="flex gap-2 flex-wrap">
+                <div className="grid grid-cols-4 sm:grid-cols-6 gap-2">
                   {[2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(num => (
                       <button
                           key={num}
@@ -472,7 +469,7 @@ const CrocodileGame = () => {
                             setPlayerCount(num);
                             setPlayerNames(Array(num).fill(null).map((_, i) => `Гравець ${i + 1}`));
                           }}
-                          className={`flex-1 min-w-[60px] py-2 rounded-lg font-semibold transition ${
+                          className={`py-2 rounded-lg text-sm sm:text-base font-semibold transition ${
                               playerCount === num
                                   ? 'bg-purple-500 text-white'
                                   : 'bg-gray-200 text-black hover:bg-gray-300'
@@ -485,7 +482,7 @@ const CrocodileGame = () => {
               </div>
 
               <div>
-                <label className="block text-lg font-semibold text-gray-800 mb-3">
+                <label className="block text-base sm:text-lg font-semibold text-gray-800 mb-2 sm:mb-3">
                   Імена гравців
                 </label>
                 <div className="space-y-2">
@@ -500,23 +497,23 @@ const CrocodileGame = () => {
                             setPlayerNames(newNames);
                           }}
                           placeholder={`Ім'я гравця ${i + 1}`}
-                          className="text-black w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:border-purple-500 outline-none"
+                          className="text-black w-full px-3 py-2 text-sm sm:text-base border-2 border-gray-300 rounded-lg focus:border-purple-500 outline-none"
                       />
                   ))}
                 </div>
               </div>
             </div>
 
-            <div className="flex gap-3 mt-8">
+            <div className="flex gap-3 mt-6 sm:mt-8">
               <button
                   onClick={() => setScreen('gameMode')}
-                  className="flex-1 bg-gray-500 text-white py-2 rounded-lg font-semibold hover:bg-gray-600 transition"
+                  className="flex-1 bg-gray-500 text-white py-2 rounded-lg text-sm sm:text-base font-semibold hover:bg-gray-600 transition"
               >
                 ← Назад
               </button>
               <button
                   onClick={() => setScreen('settingsSolo')}
-                  className="flex-1 bg-purple-500 text-white py-2 rounded-lg font-semibold hover:bg-purple-600 transition"
+                  className="flex-1 bg-purple-500 text-white py-2 rounded-lg text-sm sm:text-base font-semibold hover:bg-purple-600 transition"
               >
                 Далі →
               </button>
@@ -529,16 +526,16 @@ const CrocodileGame = () => {
 // Екран 4a: Інші налаштування для команд (ЗМІНЕНО назву з settingsTeams)
   if (screen === 'settingsTeams') {
     return (
-        <div className="min-h-screen bg-gradient-to-br from-green-500 via-emerald-500 to-teal-600 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <h2 className="text-3xl font-bold text-center text-green-600 mb-6">
-              <Settings className="inline mr-2" size={28}/>
+        <div className="min-h-screen bg-gradient-to-br from-green-500 via-emerald-500 to-teal-600 flex items-center justify-center p-3 sm:p-4">
+          <div className="bg-white rounded-2xl shadow-2xl p-4 sm:p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <h2 className="text-2xl sm:text-3xl font-bold text-center text-green-600 mb-4 sm:mb-6">
+              <Settings className="inline mr-2" size={24}/>
               Налаштування гри
             </h2>
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
 
               <div>
-                <label className="block text-lg font-semibold text-gray-800 mb-3">
+                <label className="block text-base sm:text-lg font-semibold text-gray-800 mb-2 sm:mb-3">
                   Таймер: {timeLimit} сек
                 </label>
                 <input
@@ -550,7 +547,7 @@ const CrocodileGame = () => {
                     onChange={(e) => setTimeLimit(Number(e.target.value))}
                     className="w-full text-black"
                 />
-                <div className="flex gap-2 text-xs text-gray-600 mt-2">
+                <div className="flex gap-2 text-xs text-gray-600 mt-1 sm:mt-2">
                   <span>30с</span>
                   <span className="flex-1 text-center">{timeLimit}с</span>
                   <span>360с</span>
@@ -558,7 +555,7 @@ const CrocodileGame = () => {
               </div>
 
               <div>
-                <label className="block text-lg font-semibold text-gray-800 mb-3">
+                <label className="block text-base sm:text-lg font-semibold text-gray-800 mb-2 sm:mb-3">
                   Цільовий бал: {scoreTarget}
                 </label>
                 <input
@@ -570,14 +567,15 @@ const CrocodileGame = () => {
                     onChange={(e) => setScoreTarget(Number(e.target.value))}
                     className="w-full"
                 />
-                <div className="flex gap-2 text-xs text-gray-600 mt-2">
+                <div className="flex gap-2 text-xs text-gray-600 mt-1 sm:mt-2">
                   <span>10</span>
                   <span className="flex-1 text-center">{scoreTarget}</span>
                   <span>100</span>
                 </div>
               </div>
+
               <div>
-                <label className="block text-lg font-semibold text-gray-800 mb-3">
+                <label className="block text-base sm:text-lg font-semibold text-gray-800 mb-2 sm:mb-3">
                   Рівень складності
                 </label>
                 <div className="space-y-2">
@@ -585,7 +583,7 @@ const CrocodileGame = () => {
                       <button
                           key={level}
                           onClick={() => setDifficulty(level)}
-                          className={`w-full py-2 rounded-lg font-semibold transition ${
+                          className={`w-full py-2 rounded-lg text-sm sm:text-base font-semibold transition ${
                               difficulty === level
                                   ? 'bg-green-500 text-white'
                                   : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
@@ -600,41 +598,42 @@ const CrocodileGame = () => {
               </div>
 
             </div>
-            <div className="my-[10px]">
-              <label className="flex items-center gap-3 text-lg font-semibold text-gray-800">
+            <div className="my-3 sm:my-4">
+              <label className="flex items-center gap-2 sm:gap-3 text-sm sm:text-base font-semibold text-gray-800">
                 <input
                     type="checkbox"
                     checked={penaltyEnabled}
                     onChange={(e) => setPenaltyEnabled(e.target.checked)}
-                    className="w-5 h-5"
+                    className="w-4 h-4 sm:w-5 sm:h-5"
                 />
                 Штраф за пропуск слова
               </label>
             </div>
 
             <div>
-              <label className="flex items-center gap-3 text-lg font-semibold text-gray-800">
+              <label className="flex items-center gap-2 sm:gap-3 text-sm sm:text-base font-semibold text-gray-800">
                 <input
                     type="checkbox"
                     checked={lastWordNoTime}
                     onChange={(e) => setLastWordNoTime(e.target.checked)}
-                    className="w-5 h-5"
+                    className="w-4 h-4 sm:w-5 sm:h-5"
                 />
                 Останнє слово без часу
               </label>
             </div>
-            <div className="flex gap-3 mt-8">
+
+            <div className="flex gap-3 mt-6 sm:mt-8">
               <button
                   onClick={() => setScreen('setupTeams')}
-                  className="flex-1 bg-gray-500 text-white py-2 rounded-lg font-semibold hover:bg-gray-600 transition"
+                  className="flex-1 bg-gray-500 text-white py-2 rounded-lg text-sm sm:text-base font-semibold hover:bg-gray-600 transition"
               >
                 ← Назад
               </button>
               <button
                   onClick={initializeTeamGame}
-                  className="flex-1 bg-green-500 text-white py-2 rounded-lg font-semibold hover:bg-green-600 transition flex items-center justify-center gap-2"
+                  className="flex-1 bg-green-500 text-white py-2 rounded-lg text-sm sm:text-base font-semibold hover:bg-green-600 transition flex items-center justify-center gap-2"
               >
-                <Play size={18}/> Грати
+                <Play size={16} className="sm:w-[18px] sm:h-[18px]"/> Грати
               </button>
             </div>
           </div>
@@ -645,18 +644,17 @@ const CrocodileGame = () => {
 // Екран 4b: Інші налаштування для гравців (ЗМІНЕНО назву з settingsSolo)
   if (screen === 'settingsSolo') {
     return (
-        <div
-            className="min-h-screen bg-gradient-to-br from-green-500 via-emerald-500 to-teal-600 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <h2 className="text-3xl font-bold text-center text-purple-600 mb-6">
-              <Settings className="inline mr-2" size={28}/>
+        <div className="min-h-screen bg-gradient-to-br from-green-500 via-emerald-500 to-teal-600 flex items-center justify-center p-3 sm:p-4">
+          <div className="bg-white rounded-2xl shadow-2xl p-4 sm:p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <h2 className="text-2xl sm:text-3xl font-bold text-center text-purple-600 mb-4 sm:mb-6">
+              <Settings className="inline mr-2" size={24}/>
               Налаштування гри
             </h2>
 
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
 
               <div>
-                <label className="block text-lg font-semibold text-gray-800 mb-3">
+                <label className="block text-base sm:text-lg font-semibold text-gray-800 mb-2 sm:mb-3">
                   Таймер: {timeLimit} сек
                 </label>
                 <input
@@ -668,7 +666,7 @@ const CrocodileGame = () => {
                     onChange={(e) => setTimeLimit(Number(e.target.value))}
                     className="w-full"
                 />
-                <div className="flex gap-2 text-xs text-gray-600 mt-2">
+                <div className="flex gap-2 text-xs text-gray-600 mt-1 sm:mt-2">
                   <span>30с</span>
                   <span className="flex-1 text-center">{timeLimit}с</span>
                   <span>360с</span>
@@ -676,7 +674,7 @@ const CrocodileGame = () => {
               </div>
 
               <div>
-                <label className="block text-lg font-semibold text-gray-800 mb-3">
+                <label className="block text-base sm:text-lg font-semibold text-gray-800 mb-2 sm:mb-3">
                   Цільовий бал: {scoreTarget}
                 </label>
                 <input
@@ -688,7 +686,7 @@ const CrocodileGame = () => {
                     onChange={(e) => setScoreTarget(Number(e.target.value))}
                     className="w-full"
                 />
-                <div className="flex gap-2 text-xs text-gray-600 mt-2">
+                <div className="flex gap-2 text-xs text-gray-600 mt-1 sm:mt-2">
                   <span>10</span>
                   <span className="flex-1 text-center">{scoreTarget}</span>
                   <span>100</span>
@@ -696,7 +694,7 @@ const CrocodileGame = () => {
               </div>
 
               <div>
-                <label className="block text-lg font-semibold text-gray-800 mb-3">
+                <label className="block text-base sm:text-lg font-semibold text-gray-800 mb-2 sm:mb-3">
                   Рівень складності
                 </label>
                 <div className="space-y-2">
@@ -704,7 +702,7 @@ const CrocodileGame = () => {
                       <button
                           key={level}
                           onClick={() => setDifficulty(level)}
-                          className={`w-full py-2 rounded-lg font-semibold transition ${
+                          className={`w-full py-2 rounded-lg text-sm sm:text-base font-semibold transition ${
                               difficulty === level
                                   ? 'bg-purple-500 text-white'
                                   : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
@@ -719,41 +717,43 @@ const CrocodileGame = () => {
               </div>
 
 
-              <div className="my-[5px]">
-                <label className="flex items-center gap-3 text-lg font-semibold text-gray-800">
+              <div className="my-3 sm:my-4">
+                <label className="flex items-center gap-2 sm:gap-3 text-sm sm:text-base font-semibold text-gray-800">
                   <input
                       type="checkbox"
                       checked={penaltyEnabled}
                       onChange={(e) => setPenaltyEnabled(e.target.checked)}
-                      className="w-5 h-5"
+                      className="w-4 h-4 sm:w-5 sm:h-5"
                   />
                   Штраф за пропуск слова
                 </label>
               </div>
             </div>
+
             <div>
-              <label className="flex items-center gap-3 text-lg font-semibold text-gray-800">
+              <label className="flex items-center gap-2 sm:gap-3 text-sm sm:text-base font-semibold text-gray-800">
                 <input
                     type="checkbox"
                     checked={lastWordNoTime}
                     onChange={(e) => setLastWordNoTime(e.target.checked)}
-                    className="w-5 h-5"
+                    className="w-4 h-4 sm:w-5 sm:h-5"
                 />
                 Останнє слово без часу
               </label>
             </div>
-            <div className="flex gap-3 mt-8">
+
+            <div className="flex gap-3 mt-6 sm:mt-8">
               <button
                   onClick={() => setScreen('setupPlayers')}
-                  className="flex-1 bg-gray-500 text-white py-2 rounded-lg font-semibold hover:bg-gray-600 transition"
+                  className="flex-1 bg-gray-500 text-white py-2 rounded-lg text-sm sm:text-base font-semibold hover:bg-gray-600 transition"
               >
                 ← Назад
               </button>
               <button
                   onClick={initializeSoloGame}
-                  className="flex-1 bg-purple-500 text-white py-2 rounded-lg font-semibold hover:bg-purple-600 transition flex items-center justify-center gap-2"
+                  className="flex-1 bg-purple-500 text-white py-2 rounded-lg text-sm sm:text-base font-semibold hover:bg-purple-600 transition flex items-center justify-center gap-2"
               >
-                <Play size={18}/> Грати
+                <Play size={16} className="sm:w-[18px] sm:h-[18px]"/> Грати
               </button>
             </div>
           </div>

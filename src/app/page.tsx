@@ -1,6 +1,6 @@
 'use client'
 import React, { useState, useEffect } from 'react';
-import { Play, Settings, RotateCcw, Eye, EyeOff, Volume2, VolumeX, X } from 'lucide-react';
+import { Play, Settings, Eye, EyeOff, Volume2, VolumeX, X } from 'lucide-react';
 import {easyWords} from "@/app/components/words/easyWords";
 import {mediumWords} from "@/app/components/words/mediumWords";
 import {hardWords} from "@/app/components/words/hardWords";
@@ -17,9 +17,9 @@ const CrocodileGame = () => {
   const [teamNames, setTeamNames] = useState(['Команда 1', 'Команда 2']);
   const [playerNames, setPlayerNames] = useState(['Гравець 1', 'Гравець 2']);
   const [difficulty, setDifficulty] = useState<'easy' | 'medium' | 'hard'>('medium');
-  const [timeLimit, setTimeLimit] = useState(111);
-  const [scoreTarget, setScoreTarget] = useState(50);
-  const [timeLeft, setTimeLeft] = useState(111);
+  const [timeLimit, setTimeLimit] = useState(120);
+  const [scoreTarget, setScoreTarget] = useState(35);
+  const [timeLeft, setTimeLeft] = useState(120);
   const [isRunning, setIsRunning] = useState(false);
   const [currentWord, setCurrentWord] = useState('');
   const [wordHidden, setWordHidden] = useState(false);
@@ -76,7 +76,7 @@ const CrocodileGame = () => {
     setTeams(newTeams);
     setCurrentTeam(0);
     setTimeLeft(timeLimit);
-    setWordHidden(false);
+    setWordHidden(true);
     pickNewWord();
     setScreen('game');
   };
@@ -91,7 +91,7 @@ const CrocodileGame = () => {
     setCurrentPlayer(0);
     setCurrentExplainer(0);
     setTimeLeft(timeLimit);
-    setWordHidden(false);
+    setWordHidden(true);
     pickNewWord();
     setScreen('game');
   };
@@ -100,7 +100,6 @@ const CrocodileGame = () => {
     const wordList = words[difficulty];
     const word = wordList[Math.floor(Math.random() * wordList.length)];
     setCurrentWord(word);
-    setWordHidden(false);
   };
 
   const handleGuessCorrect = (playerId: number | null = null) => {
@@ -127,35 +126,7 @@ const CrocodileGame = () => {
           }
         }
       }
-    }const handleGuessCorrect = (playerId: number | null = null) => {
-      if (gameMode === 'teams') {
-        const newTeams = [...teams];
-        newTeams[currentTeam].score += 1;
-        setTeams(newTeams);
-
-        if (newTeams[currentTeam].score >= scoreTarget) {
-          setScreen('gameOver');
-          return;
-        }
-      } else {
-        if (playerId !== null) {
-          const newPlayers = [...players];
-          const index = newPlayers.findIndex(p => p.id === playerId);
-          if (index !== -1) {
-            newPlayers[index].score += 1;
-            setPlayers(newPlayers);
-
-            if (newPlayers[index].score >= scoreTarget) {
-              setScreen('gameOver');
-              return;
-            }
-          }
-        }
-      }
-
-      pickNewWord();
-      setShowGuesserMenu(false);
-    };3
+    }
 
     pickNewWord();
     setShowGuesserMenu(false);
@@ -181,7 +152,15 @@ const CrocodileGame = () => {
     setCurrentTeam((prev) => (prev + 1) % teamCount);
     setTimeLeft(timeLimit);
     setIsRunning(false);
-    setWordHidden(false);
+    setWordHidden(true);
+    pickNewWord();
+  };
+  const handleNextPlayer = () => {
+    setCurrentExplainer((prev) => (prev + 1) % playerCount);
+    setTimeLeft(timeLimit);
+    setIsRunning(false);
+    setWordHidden(true);
+    pickNewWord();
   };
 
   const startNewRound = () => {
@@ -207,8 +186,8 @@ const CrocodileGame = () => {
     setTeamNames(['Команда 1', 'Команда 2']);
     setPlayerNames(['Гравець 1', 'Гравець 2']);
     setDifficulty('medium');
-    setTimeLimit(111);
-    setScoreTarget(50);
+    setTimeLimit(120);
+    setScoreTarget(35);
     setPenaltyEnabled(true);
     setTimeLeft(timeLimit);
     setIsRunning(false);
@@ -272,8 +251,7 @@ const CrocodileGame = () => {
         </div>
     );
   }
-
-  // Екран 2: Вибір режиму гри
+// Екран 2: Вибір режиму гри - ЗМІНЕНО
   if (screen === 'gameMode') {
     return (
         <div className="min-h-screen bg-gradient-to-br from-green-500 via-emerald-500 to-teal-600 flex items-center justify-center p-4">
@@ -284,7 +262,7 @@ const CrocodileGame = () => {
               <button
                   onClick={() => {
                     setGameMode('teams');
-                    setScreen('settingsTeams');
+                    setScreen('setupTeams'); // ЗМІНЕНО з 'settingsTeams'
                   }}
                   className="w-full bg-blue-500 text-white py-4 rounded-lg font-semibold hover:bg-blue-600 transition text-lg"
               >
@@ -293,13 +271,12 @@ const CrocodileGame = () => {
               <button
                   onClick={() => {
                     setGameMode('solo');
-                    setScreen('settingsSolo');
+                    setScreen('setupPlayers'); // ЗМІНЕНО з 'settingsSolo'
                   }}
                   className="w-full bg-purple-500 text-white py-4 rounded-lg font-semibold hover:bg-purple-600 transition text-lg"
               >
                 🎯 Режим гравців
               </button>
-
             </div>
 
             <button
@@ -313,14 +290,13 @@ const CrocodileGame = () => {
     );
   }
 
-  // Екран 3a: Налаштування командної гри
-  if (screen === 'settingsTeams') {
+// НОВИЙ ЕКРАН 3a: Налаштування команд (тільки кількість та назви)
+  if (screen === 'setupTeams') {
     return (
         <div className="min-h-screen bg-gradient-to-br from-green-500 via-emerald-500 to-teal-600 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <h2 className="text-3xl font-bold text-center text-green-600 mb-6">
-              <Settings className="inline mr-2" size={28} />
-              Налаштування команд
+              👥 Налаштування команд
             </h2>
 
             <div className="space-y-6">
@@ -369,79 +345,6 @@ const CrocodileGame = () => {
                   ))}
                 </div>
               </div>
-              <div>
-                <label className="flex items-center gap-3 text-lg font-semibold text-gray-800">
-                  <input
-                      type="checkbox"
-                      checked={penaltyEnabled}
-                      onChange={(e) => setPenaltyEnabled(e.target.checked)}
-                      className="w-5 h-5"
-                  />
-                  Штраф -1 бал за пропуск слова
-                </label>
-              </div>
-              <div>
-                <label className="block text-lg font-semibold text-gray-800 mb-3">
-                  Таймер: {timeLimit} сек
-                </label>
-                <input
-                    type="range"
-                    min="30"
-                    max="360"
-                    step="10"
-                    value={timeLimit}
-                    onChange={(e) => setTimeLimit(Number(e.target.value))}
-                    className="w-full text-black"
-                />
-                <div className="flex gap-2 text-xs text-gray-600 mt-2">
-                  <span>30с</span>
-                  <span className="flex-1 text-center">{timeLimit}с</span>
-                  <span>360с</span>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-lg font-semibold text-gray-800 mb-3">
-                  Рівень складності
-                </label>
-                <div className="space-y-2">
-                  {(['easy', 'medium', 'hard'] as const).map(level => (
-                      <button
-                          key={level}
-                          onClick={() => setDifficulty(level)}
-                          className={`w-full py-2 rounded-lg font-semibold transition ${
-                              difficulty === level
-                                  ? 'bg-green-500 text-white'
-                                  : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
-                          }`}
-                      >
-                        {level === 'easy' && '⭐ Легкий'}
-                        {level === 'medium' && '⭐⭐ Середній'}
-                        {level === 'hard' && '⭐⭐⭐ Важкий'}
-                      </button>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-lg font-semibold text-gray-800 mb-3">
-                  Цільовий бал: {scoreTarget}
-                </label>
-                <input
-                    type="range"
-                    min="10"
-                    max="100"
-                    step="5"
-                    value={scoreTarget}
-                    onChange={(e) => setScoreTarget(Number(e.target.value))}
-                    className="w-full"
-                />
-                <div className="flex gap-2 text-xs text-gray-600 mt-2">
-                  <span>10</span>
-                  <span className="flex-1 text-center">{scoreTarget}</span>
-                  <span>100</span>
-                </div>
-              </div>
             </div>
 
             <div className="flex gap-3 mt-8">
@@ -452,10 +355,10 @@ const CrocodileGame = () => {
                 ← Назад
               </button>
               <button
-                  onClick={initializeTeamGame}
-                  className="flex-1 bg-green-500 text-white py-2 rounded-lg font-semibold hover:bg-green-600 transition flex items-center justify-center gap-2"
+                  onClick={() => setScreen('settingsTeams')}
+                  className="flex-1 bg-green-500 text-white py-2 rounded-lg font-semibold hover:bg-green-600 transition"
               >
-                <Play size={18} /> Грати
+                Далі →
               </button>
             </div>
           </div>
@@ -463,14 +366,13 @@ const CrocodileGame = () => {
     );
   }
 
-  // Екран 3b: Налаштування режиму гравців
-  if (screen === 'settingsSolo') {
+// НОВИЙ ЕКРАН 3b: Налаштування гравців (тільки кількість та імена)
+  if (screen === 'setupPlayers') {
     return (
         <div className="min-h-screen bg-gradient-to-br from-green-500 via-emerald-500 to-teal-600 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <h2 className="text-3xl font-bold text-center text-green-600 mb-6">
-              <Settings className="inline mr-2" size={28} />
-              Налаштування гравців
+            <h2 className="text-3xl font-bold text-center text-purple-600 mb-6">
+              🎯 Налаштування гравців
             </h2>
 
             <div className="space-y-6">
@@ -478,7 +380,7 @@ const CrocodileGame = () => {
                 <label className="block text-lg font-semibold text-gray-800 mb-3">
                   Кількість гравців
                 </label>
-                <div className="flex gap-2">
+                <div className="flex gap-2 flex-wrap">
                   {[2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(num => (
                       <button
                           key={num}
@@ -486,7 +388,7 @@ const CrocodileGame = () => {
                             setPlayerCount(num);
                             setPlayerNames(Array(num).fill(null).map((_, i) => `Гравець ${i + 1}`));
                           }}
-                          className={`flex-1 py-2 rounded-lg font-semibold transition ${
+                          className={`flex-1 min-w-[60px] py-2 rounded-lg font-semibold transition ${
                               playerCount === num
                                   ? 'bg-purple-500 text-white'
                                   : 'bg-gray-200 text-black hover:bg-gray-300'
@@ -519,17 +421,144 @@ const CrocodileGame = () => {
                   ))}
                 </div>
               </div>
+            </div>
+
+            <div className="flex gap-3 mt-8">
+              <button
+                  onClick={() => setScreen('gameMode')}
+                  className="flex-1 bg-gray-500 text-white py-2 rounded-lg font-semibold hover:bg-gray-600 transition"
+              >
+                ← Назад
+              </button>
+              <button
+                  onClick={() => setScreen('settingsSolo')}
+                  className="flex-1 bg-purple-500 text-white py-2 rounded-lg font-semibold hover:bg-purple-600 transition"
+              >
+                Далі →
+              </button>
+            </div>
+          </div>
+        </div>
+    );
+  }
+
+// Екран 4a: Інші налаштування для команд (ЗМІНЕНО назву з settingsTeams)
+  if (screen === 'settingsTeams') {
+    return (
+        <div className="min-h-screen bg-gradient-to-br from-green-500 via-emerald-500 to-teal-600 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <h2 className="text-3xl font-bold text-center text-green-600 mb-6">
+              <Settings className="inline mr-2" size={28}/>
+              Налаштування гри
+            </h2>
+            <div className="space-y-6">
+
               <div>
-                <label className="flex items-center gap-3 text-lg font-semibold text-gray-800">
-                  <input
-                      type="checkbox"
-                      checked={penaltyEnabled}
-                      onChange={(e) => setPenaltyEnabled(e.target.checked)}
-                      className="w-5 h-5"
-                  />
-                  Штраф -1 бал за пропуск слова
+                <label className="block text-lg font-semibold text-gray-800 mb-3">
+                  Таймер: {timeLimit} сек
                 </label>
+                <input
+                    type="range"
+                    min="30"
+                    max="360"
+                    step="10"
+                    value={timeLimit}
+                    onChange={(e) => setTimeLimit(Number(e.target.value))}
+                    className="w-full text-black"
+                />
+                <div className="flex gap-2 text-xs text-gray-600 mt-2">
+                  <span>30с</span>
+                  <span className="flex-1 text-center">{timeLimit}с</span>
+                  <span>360с</span>
+                </div>
               </div>
+
+              <div>
+                <label className="block text-lg font-semibold text-gray-800 mb-3">
+                  Цільовий бал: {scoreTarget}
+                </label>
+                <input
+                    type="range"
+                    min="10"
+                    max="100"
+                    step="5"
+                    value={scoreTarget}
+                    onChange={(e) => setScoreTarget(Number(e.target.value))}
+                    className="w-full"
+                />
+                <div className="flex gap-2 text-xs text-gray-600 mt-2">
+                  <span>10</span>
+                  <span className="flex-1 text-center">{scoreTarget}</span>
+                  <span>100</span>
+                </div>
+              </div>
+              <div>
+                <label className="block text-lg font-semibold text-gray-800 mb-3">
+                  Рівень складності
+                </label>
+                <div className="space-y-2">
+                  {(['easy', 'medium', 'hard'] as const).map(level => (
+                      <button
+                          key={level}
+                          onClick={() => setDifficulty(level)}
+                          className={`w-full py-2 rounded-lg font-semibold transition ${
+                              difficulty === level
+                                  ? 'bg-green-500 text-white'
+                                  : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
+                          }`}
+                      >
+                        {level === 'easy' && '⭐ Легкий'}
+                        {level === 'medium' && '⭐⭐ Середній'}
+                        {level === 'hard' && '⭐⭐⭐ Важкий'}
+                      </button>
+                  ))}
+                </div>
+              </div>
+
+            </div>
+            <div>
+              <label className="flex items-center gap-3 text-lg font-semibold text-gray-800">
+                <input
+                    type="checkbox"
+                    checked={penaltyEnabled}
+                    onChange={(e) => setPenaltyEnabled(e.target.checked)}
+                    className="w-5 h-5"
+                />
+                Штраф за пропуск слова
+              </label>
+            </div>
+            <div className="flex gap-3 mt-8">
+              <button
+                  onClick={() => setScreen('setupTeams')}
+                  className="flex-1 bg-gray-500 text-white py-2 rounded-lg font-semibold hover:bg-gray-600 transition"
+              >
+                ← Назад
+              </button>
+              <button
+                  onClick={initializeTeamGame}
+                  className="flex-1 bg-green-500 text-white py-2 rounded-lg font-semibold hover:bg-green-600 transition flex items-center justify-center gap-2"
+              >
+                <Play size={18}/> Грати
+              </button>
+            </div>
+          </div>
+        </div>
+    );
+  }
+
+// Екран 4b: Інші налаштування для гравців (ЗМІНЕНО назву з settingsSolo)
+  if (screen === 'settingsSolo') {
+    return (
+        <div
+            className="min-h-screen bg-gradient-to-br from-green-500 via-emerald-500 to-teal-600 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <h2 className="text-3xl font-bold text-center text-purple-600 mb-6">
+              <Settings className="inline mr-2" size={28} />
+              Налаштування гри
+            </h2>
+
+            <div className="space-y-6">
+
               <div>
                 <label className="block text-lg font-semibold text-gray-800 mb-3">
                   Таймер: {timeLimit} сек
@@ -547,6 +576,26 @@ const CrocodileGame = () => {
                   <span>30с</span>
                   <span className="flex-1 text-center">{timeLimit}с</span>
                   <span>360с</span>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-lg font-semibold text-gray-800 mb-3">
+                  Цільовий бал: {scoreTarget}
+                </label>
+                <input
+                    type="range"
+                    min="10"
+                    max="100"
+                    step="5"
+                    value={scoreTarget}
+                    onChange={(e) => setScoreTarget(Number(e.target.value))}
+                    className="w-full"
+                />
+                <div className="flex gap-2 text-xs text-gray-600 mt-2">
+                  <span>10</span>
+                  <span className="flex-1 text-center">{scoreTarget}</span>
+                  <span>100</span>
                 </div>
               </div>
 
@@ -573,30 +622,23 @@ const CrocodileGame = () => {
                 </div>
               </div>
 
+
               <div>
-                <label className="block text-lg font-semibold text-gray-800 mb-3">
-                  Цільовий бал: {scoreTarget}
+                <label className="flex items-center gap-3 text-lg font-semibold text-gray-800">
+                  <input
+                      type="checkbox"
+                      checked={penaltyEnabled}
+                      onChange={(e) => setPenaltyEnabled(e.target.checked)}
+                      className="w-5 h-5"
+                  />
+                  Штраф за пропуск слова
                 </label>
-                <input
-                    type="range"
-                    min="10"
-                    max="100"
-                    step="5"
-                    value={scoreTarget}
-                    onChange={(e) => setScoreTarget(Number(e.target.value))}
-                    className="w-full"
-                />
-                <div className="flex gap-2 text-xs text-gray-600 mt-2">
-                  <span>10</span>
-                  <span className="flex-1 text-center">{scoreTarget}</span>
-                  <span>100</span>
-                </div>
               </div>
             </div>
 
             <div className="flex gap-3 mt-8">
               <button
-                  onClick={() => setScreen('gameMode')}
+                  onClick={() => setScreen('setupPlayers')}
                   className="flex-1 bg-gray-500 text-white py-2 rounded-lg font-semibold hover:bg-gray-600 transition"
               >
                 ← Назад
@@ -605,7 +647,7 @@ const CrocodileGame = () => {
                   onClick={initializeSoloGame}
                   className="flex-1 bg-purple-500 text-white py-2 rounded-lg font-semibold hover:bg-purple-600 transition flex items-center justify-center gap-2"
               >
-                <Play size={18} /> Грати
+                <Play size={18}/> Грати
               </button>
             </div>
           </div>
@@ -613,7 +655,7 @@ const CrocodileGame = () => {
     );
   }
 
-  // Екран 4: Гра
+  // Екран 5Штраф : Гра
   if (screen === 'game') {
     return (
         <div className="min-h-screen bg-gradient-to-br from-green-500 via-emerald-500 to-teal-600 flex items-center justify-center p-4 relative">
@@ -770,9 +812,9 @@ const CrocodileGame = () => {
             <div className="flex gap-4 mb-6">
               <button
                   onClick={startNewRound}
-                  disabled={isRunning}
+                  disabled={isRunning || timeLeft === 0}  // ДОДАНО || timeLeft === 0
                   className={`flex-1 py-3 rounded-lg font-semibold transition ${
-                      isRunning
+                      isRunning || timeLeft === 0  // ДОДАНО || timeLeft === 0
                           ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
                           : 'bg-green-500 text-white hover:bg-green-600'
                   }`}
@@ -841,6 +883,15 @@ const CrocodileGame = () => {
                   → Наступна команда
                 </button>
             )}
+
+            {gameMode === 'solo' && timeLeft === 0 && !isRunning && (
+                <button
+                    onClick={handleNextPlayer}
+                    className="w-full bg-purple-500 text-white py-3 rounded-lg font-semibold hover:bg-purple-600 transition"
+                >
+                  → Наступний гравець
+                </button>
+            )}
           </div>
         </div>
     );
@@ -892,8 +943,8 @@ const CrocodileGame = () => {
                     setTeamNames(['Команда 1', 'Команда 2']);
                     setPlayerNames(['Гравець 1', 'Гравець 2']);
                     setDifficulty('medium');
-                    setTimeLimit(111);
-                    setScoreTarget(50);
+                    setTimeLimit(120);
+                    setScoreTarget(35);
                     setPenaltyEnabled(true);
                     setScreen('welcome');
                   }}

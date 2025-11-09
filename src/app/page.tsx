@@ -29,6 +29,10 @@ const CrocodileGame = () => {
   const [showGuesserMenu, setShowGuesserMenu] = useState(false);
   const [currentExplainer, setCurrentExplainer] = useState(0);
   const [penaltyEnabled, setPenaltyEnabled] = useState(true);
+  const [lastWordNoTime, setLastWordNoTime] = useState(false);
+  const [lastWordUsed, setLastWordUsed] = useState(false);
+
+
 
  const words = {
     easy: easyWords,
@@ -36,21 +40,67 @@ const CrocodileGame = () => {
     hard: hardWords,
   };
 
-  const playSound = () => {
+  const playSound = (type: 'start' | 'tick' | 'end' | 'correct' | 'skip' = 'end') => {
     if (soundEnabled) {
       const audioContext = new (window.AudioContext)();
       const oscillator = audioContext.createOscillator();
       const gainNode = audioContext.createGain();
       oscillator.connect(gainNode);
       gainNode.connect(audioContext.destination);
-      oscillator.frequency.value = 800;
-      oscillator.type = 'sine';
-      gainNode.gain.setValueAtTime(0.9, audioContext.currentTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
-      oscillator.start(audioContext.currentTime);
-      oscillator.stop(audioContext.currentTime + 0.1);
+
+      if (type === 'start') {
+        oscillator.frequency.value = 600;
+        oscillator.type = 'sine';
+        gainNode.gain.setValueAtTime(0.5, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.15);
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.15);
+      } else if (type === 'tick') {
+        oscillator.frequency.value = 1000;
+        oscillator.type = 'sine';
+        gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.08);
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.08);
+      } else if (type === 'correct') {
+        // Приємний звук успіху (дві ноти вгору)
+        oscillator.frequency.value = 523; // C5
+        oscillator.type = 'sine';
+        gainNode.gain.setValueAtTime(0.4, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.2);
+
+        // Друга нота
+        const osc2 = audioContext.createOscillator();
+        const gain2 = audioContext.createGain();
+        osc2.connect(gain2);
+        gain2.connect(audioContext.destination);
+        osc2.frequency.value = 659; // E5
+        osc2.type = 'sine';
+        gain2.gain.setValueAtTime(0.4, audioContext.currentTime + 0.1);
+        gain2.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+        osc2.start(audioContext.currentTime + 0.1);
+        osc2.stop(audioContext.currentTime + 0.3);
+      } else if (type === 'skip') {
+        // Звук пропуску (коротка нота вниз)
+        oscillator.frequency.value = 300;
+        oscillator.type = 'triangle';
+        gainNode.gain.setValueAtTime(0.4, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.2);
+      } else {
+        oscillator.frequency.value = 400;
+        oscillator.type = 'square';
+        gainNode.gain.setValueAtTime(0.7, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.5);
+      }
     }
   };
+
 
   useEffect(() => {
     if (!isRunning || timeLeft <= 0) return;
@@ -58,14 +108,21 @@ const CrocodileGame = () => {
       setTimeLeft(prev => {
         if (prev <= 1) {
           setIsRunning(false);
-          playSound();
+          playSound('end');
+          if (lastWordNoTime) {
+            setLastWordUsed(false);
+          }
           return 0;
+        }
+        // Звук тиканя на останніх 3 секундах
+        if (prev <= 5) {
+          playSound('tick');
         }
         return prev - 1;
       });
     }, 1000);
     return () => clearInterval(interval);
-  }, [isRunning, timeLeft]);
+  }, [isRunning, timeLeft, lastWordNoTime, soundEnabled]);
 
   const initializeTeamGame = () => {
     const newTeams = Array(teamCount).fill(null).map((_, i) => ({
@@ -103,6 +160,11 @@ const CrocodileGame = () => {
   };
 
   const handleGuessCorrect = (playerId: number | null = null) => {
+    playSound('correct');
+    if (lastWordNoTime && timeLeft === 0) {
+      setLastWordUsed(true);
+    }
+
     if (gameMode === 'teams') {
       const newTeams = [...teams];
       newTeams[currentTeam].score += 1;
@@ -133,6 +195,11 @@ const CrocodileGame = () => {
   };
 
   const handleSkipWord = () => {
+    playSound('skip');
+    if (lastWordNoTime && timeLeft === 0) {
+      setLastWordUsed(true);
+    }
+
     if (penaltyEnabled) {
       if (gameMode === 'teams') {
         const newTeams = [...teams];
@@ -153,13 +220,16 @@ const CrocodileGame = () => {
     setTimeLeft(timeLimit);
     setIsRunning(false);
     setWordHidden(true);
+    setLastWordUsed(false);
     pickNewWord();
   };
+
   const handleNextPlayer = () => {
     setCurrentExplainer((prev) => (prev + 1) % playerCount);
     setTimeLeft(timeLimit);
     setIsRunning(false);
     setWordHidden(true);
+    setLastWordUsed(false);
     pickNewWord();
   };
 
@@ -167,6 +237,7 @@ const CrocodileGame = () => {
     setTimeLeft(timeLimit);
     setIsRunning(true);
     setWordHidden(false);
+    playSound('start')
   };
 
   const handleExitGame = () => {
@@ -189,6 +260,8 @@ const CrocodileGame = () => {
     setTimeLimit(120);
     setScoreTarget(35);
     setPenaltyEnabled(true);
+    setLastWordNoTime(false);
+    setLastWordUsed(false);
     setTimeLeft(timeLimit);
     setIsRunning(false);
     setShowExitConfirm(false);
@@ -262,7 +335,7 @@ const CrocodileGame = () => {
               <button
                   onClick={() => {
                     setGameMode('teams');
-                    setScreen('setupTeams'); // ЗМІНЕНО з 'settingsTeams'
+                    setScreen('setupTeams');
                   }}
                   className="w-full bg-blue-500 text-white py-4 rounded-lg font-semibold hover:bg-blue-600 transition text-lg"
               >
@@ -271,7 +344,7 @@ const CrocodileGame = () => {
               <button
                   onClick={() => {
                     setGameMode('solo');
-                    setScreen('setupPlayers'); // ЗМІНЕНО з 'settingsSolo'
+                    setScreen('setupPlayers');
                   }}
                   className="w-full bg-purple-500 text-white py-4 rounded-lg font-semibold hover:bg-purple-600 transition text-lg"
               >
@@ -289,6 +362,8 @@ const CrocodileGame = () => {
         </div>
     );
   }
+  //
+
 
 // НОВИЙ ЕКРАН 3a: Налаштування команд (тільки кількість та назви)
   if (screen === 'setupTeams') {
@@ -527,6 +602,17 @@ const CrocodileGame = () => {
                 Штраф за пропуск слова
               </label>
             </div>
+            <div>
+              <label className="flex items-center gap-3 text-lg font-semibold text-gray-800">
+                <input
+                    type="checkbox"
+                    checked={lastWordNoTime}
+                    onChange={(e) => setLastWordNoTime(e.target.checked)}
+                    className="w-5 h-5"
+                />
+                Останнє слово без часу
+              </label>
+            </div>
             <div className="flex gap-3 mt-8">
               <button
                   onClick={() => setScreen('setupTeams')}
@@ -553,7 +639,7 @@ const CrocodileGame = () => {
             className="min-h-screen bg-gradient-to-br from-green-500 via-emerald-500 to-teal-600 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <h2 className="text-3xl font-bold text-center text-purple-600 mb-6">
-              <Settings className="inline mr-2" size={28} />
+              <Settings className="inline mr-2" size={28}/>
               Налаштування гри
             </h2>
 
@@ -635,7 +721,17 @@ const CrocodileGame = () => {
                 </label>
               </div>
             </div>
-
+            <div>
+              <label className="flex items-center gap-3 text-lg font-semibold text-gray-800">
+                <input
+                    type="checkbox"
+                    checked={lastWordNoTime}
+                    onChange={(e) => setLastWordNoTime(e.target.checked)}
+                    className="w-5 h-5"
+                />
+                Останнє слово без часу
+              </label>
+            </div>
             <div className="flex gap-3 mt-8">
               <button
                   onClick={() => setScreen('setupPlayers')}
@@ -658,7 +754,8 @@ const CrocodileGame = () => {
   // Екран 5Штраф : Гра
   if (screen === 'game') {
     return (
-        <div className="min-h-screen bg-gradient-to-br from-green-500 via-emerald-500 to-teal-600 flex items-center justify-center p-4 relative">
+        <div
+            className="min-h-screen bg-gradient-to-br from-green-500 via-emerald-500 to-teal-600 flex items-center justify-center p-4 relative">
           {/* Модальне вікно вибору гравця для режиму solo */}
           {showGuesserMenu && gameMode === 'solo' && (
               <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
@@ -781,15 +878,17 @@ const CrocodileGame = () => {
             <div className={`text-center mb-8 p-8 rounded-lg ${
                 timeLeft <= 10 ? 'bg-red-100' : 'bg-blue-100'
             }`}>
-              <div className="text-6xl font-bold text-blue-600 mb-4">
-                {timeLeft}
-              </div>
+
               {gameMode === 'solo' && (
                   <p className="text-center text-gray-600 mb-6">
                     Показує: <span className="font-bold text-purple-600">{players[currentExplainer]?.name}</span>
                   </p>
               )}
-              <div className="text-gray-700 font-semibold">Час для вгадування</div>
+              <div className="text-gray-700 font-semibold">Час для вгадування:</div>
+              <div className="text-6xl font-bold text-blue-600 mb-4">
+                {timeLeft}
+              </div>
+
             </div>
 
             <div
@@ -812,9 +911,9 @@ const CrocodileGame = () => {
             <div className="flex gap-4 mb-6">
               <button
                   onClick={startNewRound}
-                  disabled={isRunning || timeLeft === 0}  // ДОДАНО || timeLeft === 0
+                  disabled={isRunning || timeLeft === 0}
                   className={`flex-1 py-3 rounded-lg font-semibold transition ${
-                      isRunning || timeLeft === 0  // ДОДАНО || timeLeft === 0
+                      isRunning || timeLeft === 0  
                           ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
                           : 'bg-green-500 text-white hover:bg-green-600'
                   }`}
@@ -825,9 +924,9 @@ const CrocodileGame = () => {
                   <>
                     <button
                         onClick={() => handleGuessCorrect()}
-                        disabled={!isRunning}
+                        disabled={!isRunning && !(lastWordNoTime && timeLeft === 0 && !lastWordUsed)}
                         className={`flex-1 py-3 rounded-lg font-semibold transition ${
-                            !isRunning
+                            !isRunning && !(lastWordNoTime && timeLeft === 0 && !lastWordUsed)
                                 ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
                                 : 'bg-blue-500 text-white hover:bg-blue-600'
                         }`}
@@ -836,9 +935,9 @@ const CrocodileGame = () => {
                     </button>
                     <button
                         onClick={handleSkipWord}
-                        disabled={!isRunning}
+                        disabled={!isRunning && !(lastWordNoTime && timeLeft === 0 && !lastWordUsed)}
                         className={`flex-1 py-3 rounded-lg font-semibold transition ${
-                            !isRunning
+                            !isRunning && !(lastWordNoTime && timeLeft === 0 && !lastWordUsed)
                                 ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
                                 : 'bg-orange-500 text-white hover:bg-orange-600'
                         }`}
@@ -851,9 +950,9 @@ const CrocodileGame = () => {
                   <>
                     <button
                         onClick={() => setShowGuesserMenu(true)}
-                        disabled={!isRunning}
+                        disabled={!isRunning && !(lastWordNoTime && timeLeft === 0 && !lastWordUsed)}
                         className={`flex-1 py-3 rounded-lg font-semibold transition ${
-                            !isRunning
+                            !isRunning && !(lastWordNoTime && timeLeft === 0 && !lastWordUsed)
                                 ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
                                 : 'bg-blue-500 text-white hover:bg-blue-600'
                         }`}
@@ -862,9 +961,9 @@ const CrocodileGame = () => {
                     </button>
                     <button
                         onClick={handleSkipWord}
-                        disabled={!isRunning}
+                        disabled={!isRunning && !(lastWordNoTime && timeLeft === 0 && !lastWordUsed)}
                         className={`flex-1 py-3 rounded-lg font-semibold transition ${
-                            !isRunning
+                            !isRunning && !(lastWordNoTime && timeLeft === 0 && !lastWordUsed)
                                 ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
                                 : 'bg-orange-500 text-white hover:bg-orange-600'
                         }`}
@@ -878,7 +977,12 @@ const CrocodileGame = () => {
             {gameMode === 'teams' && timeLeft === 0 && !isRunning && (
                 <button
                     onClick={handleNextTeam}
-                    className="w-full bg-purple-500 text-white py-3 rounded-lg font-semibold hover:bg-purple-600 transition"
+                    disabled={lastWordNoTime && !lastWordUsed}
+                    className={`w-full py-3 rounded-lg font-semibold transition ${
+                        lastWordNoTime && !lastWordUsed
+                            ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
+                            : 'bg-purple-500 text-white hover:bg-purple-600'
+                    }`}
                 >
                   → Наступна команда
                 </button>
@@ -887,7 +991,12 @@ const CrocodileGame = () => {
             {gameMode === 'solo' && timeLeft === 0 && !isRunning && (
                 <button
                     onClick={handleNextPlayer}
-                    className="w-full bg-purple-500 text-white py-3 rounded-lg font-semibold hover:bg-purple-600 transition"
+                    disabled={lastWordNoTime && !lastWordUsed}
+                    className={`w-full py-3 rounded-lg font-semibold transition ${
+                        lastWordNoTime && !lastWordUsed
+                            ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
+                            : 'bg-purple-500 text-white hover:bg-purple-600'
+                    }`}
                 >
                   → Наступний гравець
                 </button>

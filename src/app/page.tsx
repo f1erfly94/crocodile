@@ -271,26 +271,26 @@ const CrocodileGame = () => {
   // Екран 1: Ласкаво просимо
   if (screen === 'welcome') {
     return (
-        <div className="min-h-screen bg-gradient-to-br from-green-500 via-emerald-500 to-teal-600 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full">
-            <div className="text-center mb-8">
-              <h1 className="text-4xl font-bold text-green-600 mb-2 flex justify-center items-center">
+        <div className="min-h-screen bg-gradient-to-br from-green-500 via-emerald-500 to-teal-600 flex items-center justify-center p-3 sm:p-4">
+          <div className="bg-white rounded-2xl shadow-2xl p-4 sm:p-8 max-w-md w-full">
+            <div className="text-center mb-6 sm:mb-8">
+              <h1 className="text-2xl sm:text-4xl font-bold text-green-600 mb-2 flex justify-center items-center">
                 <img
                     src="/cute.png"
                     alt="крокодил"
-                    className="w-12 h-12 mr-2"
+                    className="w-8 h-8 sm:w-12 sm:h-12 mr-2"
                 />
-               Крокодил
+                Крокодил
               </h1>
-              <p className="text-gray-600">Захопливо, весело та цікаво!</p>
+              <p className="text-sm sm:text-base text-gray-600">Захопливо, весело та цікаво!</p>
             </div>
 
 
             {showRules ? (
-                <div className="space-y-4">
-                  <div className="bg-blue-50 p-4 rounded-lg">
-                    <h3 className="font-bold text-lg mb-3 text-gray-800">Правила гри:</h3>
-                    <ul className="space-y-2 text-sm text-gray-700">
+                <div className="space-y-3 sm:space-y-4">
+                  <div className="bg-blue-50 p-3 sm:p-4 rounded-lg">
+                    <h3 className="font-bold text-base sm:text-lg mb-2 sm:mb-3 text-gray-800">Правила гри:</h3>
+                    <ul className="space-y-1.5 sm:space-y-2 text-xs sm:text-sm text-gray-700">
                       <li><strong>Мета:</strong> Один гравець показує слово жестами, а всі інші вгадують слово.</li>
                       <li><strong>Правила:</strong> Не можна говорити, писати або показувати букви.</li>
                       <li><strong>Таймер:</strong> На кожне слово виділено обмежений час.</li>
@@ -300,30 +300,30 @@ const CrocodileGame = () => {
                   </div>
                   <button
                       onClick={() => setShowRules(false)}
-                      className="w-full bg-gray-500 text-white py-2 rounded-lg font-semibold hover:bg-gray-600 transition"
+                      className="w-full bg-gray-500 text-white py-2 sm:py-2.5 rounded-lg text-sm sm:text-base font-semibold hover:bg-gray-600 transition"
                   >
                     ← Назад
                   </button>
                 </div>
             ) : (
-                <div className="space-y-4">
+                <div className="space-y-3 sm:space-y-4">
                   <button
                       onClick={() => setScreen('gameMode')}
-                      className="w-full bg-green-500 text-white py-3 rounded-lg font-semibold hover:bg-green-600 transition flex items-center justify-center gap-2"
+                      className="w-full bg-green-500 text-white py-2.5 sm:py-3 rounded-lg text-sm sm:text-base font-semibold hover:bg-green-600 transition flex items-center justify-center gap-2"
                   >
-                    <Play size={20}/> Нова гра
+                    <Play size={18} className="sm:w-5 sm:h-5"/> Нова гра
                   </button>
                   <button
                       onClick={() => setShowRules(true)}
-                      className="w-full bg-blue-500 text-white py-3 rounded-lg font-semibold hover:bg-blue-600 transition"
+                      className="w-full bg-blue-500 text-white py-2.5 sm:py-3 rounded-lg text-sm sm:text-base font-semibold hover:bg-blue-600 transition"
                   >
                     📖 Переглянути правила
                   </button>
                   <button
                       onClick={() => setSoundEnabled(!soundEnabled)}
-                      className="w-full bg-gray-500 text-white py-2 rounded-lg font-semibold hover:bg-gray-600 transition flex items-center justify-center gap-2"
+                      className="w-full bg-gray-500 text-white py-2 sm:py-2.5 rounded-lg text-sm sm:text-base font-semibold hover:bg-gray-600 transition flex items-center justify-center gap-2"
                   >
-                    {soundEnabled ? <Volume2 size={20}/> : <VolumeX size={20}/>}
+                    {soundEnabled ? <Volume2 size={18} className="sm:w-5 sm:h-5"/> : <VolumeX size={18} className="sm:w-5 sm:h-5"/>}
                     {soundEnabled ? 'Звук: Увімкнений' : 'Звук: Вимкнений'}
                   </button>
                 </div>
@@ -600,7 +600,7 @@ const CrocodileGame = () => {
               </div>
 
             </div>
-            <div>
+            <div className="my-[10px]">
               <label className="flex items-center gap-3 text-lg font-semibold text-gray-800">
                 <input
                     type="checkbox"
@@ -611,6 +611,7 @@ const CrocodileGame = () => {
                 Штраф за пропуск слова
               </label>
             </div>
+
             <div>
               <label className="flex items-center gap-3 text-lg font-semibold text-gray-800">
                 <input
@@ -718,7 +719,7 @@ const CrocodileGame = () => {
               </div>
 
 
-              <div>
+              <div className="my-[5px]">
                 <label className="flex items-center gap-3 text-lg font-semibold text-gray-800">
                   <input
                       type="checkbox"
@@ -764,21 +765,21 @@ const CrocodileGame = () => {
   if (screen === 'game') {
     return (
         <div
-            className="min-h-screen bg-gradient-to-br from-green-500 via-emerald-500 to-teal-600 flex items-center justify-center p-4 relative">
-          {/* Модальне вікно вибору гравця для режиму solo */}
-          {showGuesserMenu && gameMode === 'solo' && (
-              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-                <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full">
-                  <h3 className="text-2xl font-bold text-center text-purple-600 mb-4">Хто вгадав?</h3>
+            className="min-h-screen bg-gradient-to-br from-green-500 via-emerald-500 to-teal-600 flex items-center justify-center p-3 sm:p-4 relative">
 
-                  <div className="space-y-3 max-h-64 overflow-y-auto">
+          {showGuesserMenu && gameMode === 'solo' && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-3 sm:p-4 z-50">
+                <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 max-w-md w-full">
+                  <h3 className="text-xl sm:text-2xl font-bold text-center text-purple-600 mb-4">Хто вгадав?</h3>
+
+                  <div className="space-y-2 sm:space-y-3 max-h-64 overflow-y-auto">
                     {players
                         .filter((_, index) => index !== currentExplainer)
                         .map((player) => (
                             <button
                                 key={player.id}
                                 onClick={() => handleGuessCorrect(player.id)}
-                                className="w-full bg-purple-500 text-white py-3 rounded-lg font-semibold hover:bg-purple-600 transition text-lg"
+                                className="w-full bg-purple-500 text-white py-2.5 sm:py-3 rounded-lg text-base sm:text-lg font-semibold hover:bg-purple-600 transition"
                             >
                               {player.name} ({player.score})
                             </button>
@@ -786,29 +787,29 @@ const CrocodileGame = () => {
                   </div>
                   <button
                       onClick={() => setShowGuesserMenu(false)}
-                      className="w-full mt-4 bg-gray-500 text-white py-2 rounded-lg font-semibold hover:bg-gray-600 transition"
+                      className="w-full mt-3 sm:mt-4 bg-gray-500 text-white py-2 sm:py-2 rounded-lg text-sm sm:text-base font-semibold hover:bg-gray-600 transition"
                   >
                     ← Скасувати
                   </button>
                 </div>
               </div>
           )}
-          {/* Модальне вікно підтвердження виходу */}
+
           {showExitConfirm && (
-              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-                <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full">
-                  <h3 className="text-2xl font-bold text-center text-red-600 mb-6">Ви впевнені?</h3>
-                  <p className="text-center text-gray-700 mb-6">Поточна гра буде втрачена</p>
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-3 sm:p-4 z-50">
+                <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 max-w-md w-full">
+                  <h3 className="text-xl sm:text-2xl font-bold text-center text-red-600 mb-4 sm:mb-6">Ви впевнені?</h3>
+                  <p className="text-sm sm:text-base text-center text-gray-700 mb-4 sm:mb-6">Поточна гра буде втрачена</p>
                   <div className="flex gap-3">
                     <button
                         onClick={() => setShowExitConfirm(false)}
-                        className="flex-1 bg-gray-500 text-white py-2 rounded-lg font-semibold hover:bg-gray-600 transition"
+                        className="flex-1 bg-gray-500 text-white py-2 rounded-lg text-sm sm:text-base font-semibold hover:bg-gray-600 transition"
                     >
                       ← Назад
                     </button>
                     <button
                         onClick={confirmExit}
-                        className="flex-1 bg-red-500 text-white py-2 rounded-lg font-semibold hover:bg-red-600 transition"
+                        className="flex-1 bg-red-500 text-white py-2 rounded-lg text-sm sm:text-base font-semibold hover:bg-red-600 transition"
                     >
                       Вийти
                     </button>
@@ -817,33 +818,33 @@ const CrocodileGame = () => {
               </div>
           )}
 
-          <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-2xl w-full">
-            <div className="flex justify-between items-center mb-8">
-              <h1 className="text-3xl font-bold text-green-600">
+          <div className="bg-white rounded-2xl shadow-2xl p-4 sm:p-8 max-w-2xl w-full">
+            <div className="flex justify-between items-center mb-4 sm:mb-8">
+              <h1 className="text-xl sm:text-3xl font-bold text-green-600">
                 {gameMode === 'teams' ? teams[currentTeam]?.name : 'Режим гравців'}
               </h1>
               <button
                   onClick={handleExitGame}
-                  className="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600 transition"
+                  className="bg-red-500 text-white p-1.5 sm:p-2 rounded-lg hover:bg-red-600 transition"
                   title="Вийти в меню"
               >
-                <X size={24}/>
+                <X size={20} className="sm:w-6 sm:h-6"/>
               </button>
             </div>
 
-            <div className="grid grid-cols-2 gap-4 mb-4">
+            <div className="grid grid-cols-2 gap-2 sm:gap-4 mb-3 sm:mb-4">
               {gameMode === 'teams' ? (
                   teams.map((team, idx) => (
                       <div
                           key={team.id}
-                          className={`p-4 rounded-lg text-center ${
+                          className={`p-2 sm:p-4 rounded-lg text-center ${
                               idx === currentTeam
                                   ? 'bg-green-500 text-white'
                                   : 'bg-gray-200 text-gray-800'
                           }`}
                       >
-                        <div className="font-semibold">{team.name}</div>
-                        <div className="text-3xl font-bold">{team.score}</div>
+                        <div className="text-sm sm:text-base font-semibold">{team.name}</div>
+                        <div className="text-2xl sm:text-3xl font-bold">{team.score}</div>
                       </div>
                   ))
               ) : (
@@ -851,19 +852,19 @@ const CrocodileGame = () => {
                     {players.slice(0, 2).map((player) => (
                         <div
                             key={player.id}
-                            className="p-4 rounded-lg text-center bg-purple-100"
+                            className="p-2 sm:p-4 rounded-lg text-center bg-purple-100"
                         >
-                          <div className="font-semibold text-gray-800">{player.name}</div>
-                          <div className="text-3xl font-bold text-purple-600">{player.score}</div>
+                          <div className="text-sm sm:text-base font-semibold text-gray-800">{player.name}</div>
+                          <div className="text-2xl sm:text-3xl font-bold text-purple-600">{player.score}</div>
                         </div>
                     ))}
                     {players.slice(2, 4).map((player) => (
                         <div
                             key={player.id}
-                            className="p-4 rounded-lg text-center bg-purple-100"
+                            className="p-2 sm:p-4 rounded-lg text-center bg-purple-100"
                         >
-                          <div className="font-semibold text-gray-800">{player.name}</div>
-                          <div className="text-3xl font-bold text-purple-600">{player.score}</div>
+                          <div className="text-sm sm:text-base font-semibold text-gray-800">{player.name}</div>
+                          <div className="text-2xl sm:text-3xl font-bold text-purple-600">{player.score}</div>
                         </div>
                     ))}
                   </>
@@ -871,30 +872,30 @@ const CrocodileGame = () => {
             </div>
 
             {gameMode === 'solo' && players.length > 4 && (
-                <div className="grid grid-cols-2 gap-4 mb-8">
+                <div className="grid grid-cols-2 gap-2 sm:gap-4 mb-4 sm:mb-8">
                   {players.slice(4).map((player) => (
                       <div
                           key={player.id}
-                          className="p-4 rounded-lg text-center bg-purple-100"
+                          className="p-2 sm:p-4 rounded-lg text-center bg-purple-100"
                       >
-                        <div className="font-semibold text-gray-800">{player.name}</div>
-                        <div className="text-3xl font-bold text-purple-600">{player.score}</div>
+                        <div className="text-sm sm:text-base font-semibold text-gray-800">{player.name}</div>
+                        <div className="text-2xl sm:text-3xl font-bold text-purple-600">{player.score}</div>
                       </div>
                   ))}
                 </div>
             )}
 
-            <div className={`text-center mb-8 p-8 rounded-lg ${
+            <div className={`text-center mb-4 sm:mb-8 p-4 sm:p-8 rounded-lg ${
                 timeLeft <= 10 ? 'bg-red-100' : 'bg-blue-100'
             }`}>
 
               {gameMode === 'solo' && (
-                  <p className="text-center text-gray-600 mb-6">
+                  <p className="text-center text-sm sm:text-base text-gray-600 mb-3 sm:mb-6">
                     Показує: <span className="font-bold text-purple-600">{players[currentExplainer]?.name}</span>
                   </p>
               )}
-              <div className="text-gray-700 font-semibold">Час для вгадування:</div>
-              <div className="text-6xl font-bold text-blue-600 mb-4">
+              <div className="text-sm sm:text-base text-gray-700 font-semibold">Час для вгадування:</div>
+              <div className="text-4xl sm:text-6xl font-bold text-blue-600 mb-2 sm:mb-4">
                 {timeLeft}
               </div>
 
@@ -902,56 +903,56 @@ const CrocodileGame = () => {
 
             <div
                 onClick={() => setWordHidden(!wordHidden)}
-                className="bg-yellow-50 p-8 rounded-lg mb-6 text-center border-4 border-yellow-300 cursor-pointer hover:bg-yellow-100 transition"
+                className="bg-yellow-50 p-4 sm:p-8 rounded-lg mb-4 sm:mb-6 text-center border-2 sm:border-4 border-yellow-300 cursor-pointer hover:bg-yellow-100 transition"
             >
               {wordHidden ? (
-                  <div className="text-5xl font-bold text-gray-400 mb-4">Слово приховано</div>
+                  <div className="text-3xl sm:text-5xl font-bold text-gray-400 mb-2 sm:mb-4"></div>
               ) : (
-                  <div className="text-5xl font-bold text-green-600">{currentWord}</div>
+                  <div className="text-3xl sm:text-5xl font-bold text-green-600">{currentWord}</div>
               )}
 
-              <div className="mt-4 text-gray-600 hover:text-gray-800 flex items-center justify-center gap-2 mx-auto">
-                {wordHidden ? <Eye size={24}/> : <EyeOff size={24}/>}
+              <div className="mt-2 sm:mt-4 text-sm sm:text-base text-gray-600 hover:text-gray-800 flex items-center justify-center gap-2 mx-auto">
+                {wordHidden ? <Eye size={18} className="sm:w-6 sm:h-6"/> : <EyeOff size={18} className="sm:w-6 sm:h-6"/>}
                 {wordHidden ? 'Показати слово' : 'Сховати слово'}
               </div>
             </div>
 
 
-            <div className="flex gap-4 mb-6">
+            <div className="flex gap-2 sm:gap-4 mb-4 sm:mb-6">
               <button
                   onClick={startNewRound}
                   disabled={isRunning || timeLeft === 0}
-                  className={`flex-1 py-3 rounded-lg font-semibold transition ${
-                      isRunning || timeLeft === 0  
+                  className={`flex-1 py-2 sm:py-3 rounded-lg text-sm sm:text-base font-semibold transition ${
+                      isRunning || timeLeft === 0
                           ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
                           : 'bg-green-500 text-white hover:bg-green-600'
                   }`}
               >
-                {isRunning ? 'Гра йде...' : '▶️ Почати раунд'}
+                {isRunning ? 'Гра йде...' : 'Почати раунд'}
               </button>
               {gameMode === 'teams' && (
                   <>
                     <button
                         onClick={() => handleGuessCorrect()}
                         disabled={!isRunning && !(lastWordNoTime && timeLeft === 0 && !lastWordUsed)}
-                        className={`flex-1 py-3 rounded-lg font-semibold transition ${
+                        className={`flex-1 py-2 sm:py-3 rounded-lg text-sm sm:text-base font-semibold transition ${
                             !isRunning && !(lastWordNoTime && timeLeft === 0 && !lastWordUsed)
                                 ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
                                 : 'bg-blue-500 text-white hover:bg-blue-600'
                         }`}
                     >
-                      ✓ Правильно
+                      Правильно
                     </button>
                     <button
                         onClick={handleSkipWord}
                         disabled={!isRunning && !(lastWordNoTime && timeLeft === 0 && !lastWordUsed)}
-                        className={`flex-1 py-3 rounded-lg font-semibold transition ${
+                        className={`flex-1 py-2 sm:py-3 rounded-lg text-sm sm:text-base font-semibold transition ${
                             !isRunning && !(lastWordNoTime && timeLeft === 0 && !lastWordUsed)
                                 ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
                                 : 'bg-orange-500 text-white hover:bg-orange-600'
                         }`}
                     >
-                      ⊘ Пропустити {penaltyEnabled && '(-1)'}
+                      Пропустити {penaltyEnabled && '(-1)'}
                     </button>
                   </>
               )}
@@ -960,24 +961,24 @@ const CrocodileGame = () => {
                     <button
                         onClick={() => setShowGuesserMenu(true)}
                         disabled={!isRunning && !(lastWordNoTime && timeLeft === 0 && !lastWordUsed)}
-                        className={`flex-1 py-3 rounded-lg font-semibold transition ${
+                        className={`flex-1 py-2 sm:py-3 rounded-lg text-sm sm:text-base font-semibold transition ${
                             !isRunning && !(lastWordNoTime && timeLeft === 0 && !lastWordUsed)
                                 ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
                                 : 'bg-blue-500 text-white hover:bg-blue-600'
                         }`}
                     >
-                      ✓ Вгадав
+                      Вгадав
                     </button>
                     <button
                         onClick={handleSkipWord}
                         disabled={!isRunning && !(lastWordNoTime && timeLeft === 0 && !lastWordUsed)}
-                        className={`flex-1 py-3 rounded-lg font-semibold transition ${
+                        className={`flex-1 py-2 sm:py-3 rounded-lg text-sm sm:text-base font-semibold transition ${
                             !isRunning && !(lastWordNoTime && timeLeft === 0 && !lastWordUsed)
                                 ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
                                 : 'bg-orange-500 text-white hover:bg-orange-600'
                         }`}
                     >
-                      ⊘ Пропустити
+                      Пропустити
                     </button>
                   </>
               )}
@@ -987,7 +988,7 @@ const CrocodileGame = () => {
                 <button
                     onClick={handleNextTeam}
                     disabled={lastWordNoTime && !lastWordUsed}
-                    className={`w-full py-3 rounded-lg font-semibold transition ${
+                    className={`w-full py-2 sm:py-3 rounded-lg text-sm sm:text-base font-semibold transition ${
                         lastWordNoTime && !lastWordUsed
                             ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
                             : 'bg-purple-500 text-white hover:bg-purple-600'
@@ -1001,7 +1002,7 @@ const CrocodileGame = () => {
                 <button
                     onClick={handleNextPlayer}
                     disabled={lastWordNoTime && !lastWordUsed}
-                    className={`w-full py-3 rounded-lg font-semibold transition ${
+                    className={`w-full py-2 sm:py-3 rounded-lg text-sm sm:text-base font-semibold transition ${
                         lastWordNoTime && !lastWordUsed
                             ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
                             : 'bg-purple-500 text-white hover:bg-purple-600'

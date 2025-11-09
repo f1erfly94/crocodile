@@ -274,9 +274,17 @@ const CrocodileGame = () => {
         <div className="min-h-screen bg-gradient-to-br from-green-500 via-emerald-500 to-teal-600 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full">
             <div className="text-center mb-8">
-              <h1 className="text-4xl font-bold text-green-600 mb-2">🐊 Крокодил</h1>
+              <h1 className="text-4xl font-bold text-green-600 mb-2 flex justify-center items-center">
+                <img
+                    src="/cute.png"
+                    alt="крокодил"
+                    className="w-12 h-12 mr-2"
+                />
+               Крокодил
+              </h1>
               <p className="text-gray-600">Захопливо, весело та цікаво!</p>
             </div>
+
 
             {showRules ? (
                 <div className="space-y-4">
@@ -303,7 +311,7 @@ const CrocodileGame = () => {
                       onClick={() => setScreen('gameMode')}
                       className="w-full bg-green-500 text-white py-3 rounded-lg font-semibold hover:bg-green-600 transition flex items-center justify-center gap-2"
                   >
-                    <Play size={20} /> Нова гра
+                    <Play size={20}/> Нова гра
                   </button>
                   <button
                       onClick={() => setShowRules(true)}
@@ -315,7 +323,7 @@ const CrocodileGame = () => {
                       onClick={() => setSoundEnabled(!soundEnabled)}
                       className="w-full bg-gray-500 text-white py-2 rounded-lg font-semibold hover:bg-gray-600 transition flex items-center justify-center gap-2"
                   >
-                    {soundEnabled ? <Volume2 size={20} /> : <VolumeX size={20} />}
+                    {soundEnabled ? <Volume2 size={20}/> : <VolumeX size={20}/>}
                     {soundEnabled ? 'Звук: Увімкнений' : 'Звук: Вимкнений'}
                   </button>
                 </div>
@@ -327,7 +335,8 @@ const CrocodileGame = () => {
 // Екран 2: Вибір режиму гри - ЗМІНЕНО
   if (screen === 'gameMode') {
     return (
-        <div className="min-h-screen bg-gradient-to-br from-green-500 via-emerald-500 to-teal-600 flex items-center justify-center p-4">
+        <div
+            className="min-h-screen bg-gradient-to-br from-green-500 via-emerald-500 to-teal-600 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full">
             <h2 className="text-3xl font-bold text-center text-green-600 mb-8">Виберіть режим</h2>
 
